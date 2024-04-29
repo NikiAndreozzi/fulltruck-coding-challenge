@@ -1,12 +1,12 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FC } from 'react'
-import DatePickerWithRange from '../DateRangePicker/DateRangePicker'
+import DatePickerWithRange from '../dateRangePicker/DateRangePicker'
 
 type Props = {}
 const Filters: FC<Props> = () => {
   return (
     <section className="w-full flex justify-between p-4 gap-8">
-      <div className='flex gap-8'>
+      <div className="flex gap-8">
         <Select>
           <SelectTrigger className="w-[11.25rem]">
             <SelectValue placeholder="Time target" />
