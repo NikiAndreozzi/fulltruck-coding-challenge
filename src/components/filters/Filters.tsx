@@ -6,14 +6,16 @@ import { AggregateBy, TimeTarget } from '@/models/filters'
 
 type Props = {}
 const Filters: FC<Props> = () => {
-  const { dispatch } = useDataContext()
+  const { dispatchFilters } = useDataContext()
   return (
     <section className="w-full flex justify-between py-4 gap-8">
       <div className="flex gap-8">
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Time target</label>
           <Select
-            onValueChange={(value: TimeTarget) => dispatch({ type: 'SET_TIME_TARGET', payload: value })}
+            onValueChange={(value: TimeTarget) =>
+              dispatchFilters({ type: 'SET_TIME_TARGET', payload: value })
+            }
             defaultValue="created_at"
           >
             <SelectTrigger className="w-[11.25rem]">
@@ -29,7 +31,9 @@ const Filters: FC<Props> = () => {
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Aggregation type</label>
           <Select
-            onValueChange={(value: AggregateBy) => dispatch({ type: 'SET_AGGREGATE_BY', payload: value })}
+            onValueChange={(value: AggregateBy) =>
+              dispatchFilters({ type: 'SET_AGGREGATE_BY', payload: value })
+            }
             defaultValue="day"
           >
             <SelectTrigger className="w-[11.25rem]">

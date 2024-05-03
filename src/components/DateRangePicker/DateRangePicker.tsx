@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useDataContext } from '@/context/DataContext'
 
 const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { dispatch } = useDataContext()
+  const { dispatchFilters } = useDataContext()
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
@@ -48,8 +48,11 @@ const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>
             selected={date}
             onSelect={(range) => {
               setDate(range)
-              dispatch({ type: 'SET_START_DATE', payload: range?.from ? range.from.toDateString() : null })
-              dispatch({ type: 'SET_END_DATE', payload: range?.to ? range.to.toDateString() : null })
+              dispatchFilters({
+                type: 'SET_START_DATE',
+                payload: range?.from ? range.from.toDateString() : null,
+              })
+              dispatchFilters({ type: 'SET_END_DATE', payload: range?.to ? range.to.toDateString() : null })
             }}
             numberOfMonths={2}
           />

@@ -1,15 +1,19 @@
-import { DataTable } from '@/hook/response'
+import { DataTable, Histograms, StatisticsResponse } from '@/hook/response'
 import useStatistics from '@/hook/useStatistics'
 import { Filters } from '@/models/filters'
 import React, { FC, createContext, useMemo, useEffect } from 'react'
 
-type Action =
+type ActionFilters =
   | { type: 'SET_START_DATE'; payload: string | null }
   | { type: 'SET_END_DATE'; payload: string | null }
   | { type: 'SET_TIME_TARGET'; payload: 'pickup_date' | 'created_at' }
   | { type: 'SET_AGGREGATE_BY'; payload: 'day' | 'week' | 'month' }
 
-const reducer = (state: Filters, action: Action): Filters => {
+type ActionData =
+  | { type: 'SET_DATA_TABLE'; payload: DataTable[] }
+  | { type: 'SET_HISTOGRAMS'; payload: Histograms | null }
+
+const reducerFilters = (state: Filters, action: ActionFilters): Filters => {
   switch (action.type) {
     case 'SET_START_DATE':
       return { ...state, startDate: action.payload }
@@ -24,29 +28,53 @@ const reducer = (state: Filters, action: Action): Filters => {
   }
 }
 
-const initialState: Filters = {
+const reducerData = (state: Partial<StatisticsResponse>, action: ActionData): Partial<StatisticsResponse> => {
+  switch (action.type) {
+    case 'SET_DATA_TABLE':
+      return { ...state, data_table: action.payload }
+    case 'SET_HISTOGRAMS':
+      return { ...state, histograms: action.payload }
+    default:
+      return state
+  }
+}
+
+const initialStateFilters: Filters = {
   startDate: null,
   endDate: null,
   timeTarget: 'created_at',
   aggregateBy: 'day',
 }
 
+const initialStateData: Partial<StatisticsResponse> = {
+  data_table: [],
+  histograms: null,
+}
+
 type DataContextProps = {
-  dataTable: DataTable[]
-  dispatch: React.Dispatch<Action>
+  data: Partial<StatisticsResponse>
+  dispatchFilters: React.Dispatch<ActionFilters>
+  dispatchData: React.Dispatch<ActionData>
   loading: boolean
 }
 
-const DataContext = createContext<DataContextProps>({ dataTable: [], dispatch: () => {}, loading: false })
+const DataContext = createContext<DataContextProps>({
+  data: {},
+  dispatchFilters: () => {},
+  dispatchData: () => {},
+  loading: false,
+})
 
 interface DataProviderProps {
   children?: React.ReactNode
 }
 
 const DataProvider: FC<DataProviderProps> = ({ children }) => {
-  const [filters, dispatch] = React.useReducer(reducer, initialState)
   const [loading, setLoading] = React.useState(false)
-  const [dataTable, setDataTable] = React.useState<DataTable[]>([])
+
+  const [filters, dispatchFilters] = React.useReducer(reducerFilters, initialStateFilters)
+  const [data, dispatchData] = React.useReducer(reducerData, initialStateData)
+
   const resp = useStatistics()
 
   useEffect(() => {
@@ -60,35 +88,20 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
         endDate: filters.endDate,
       })
       .then((resp) => {
-        setDataTable(resp?.data_table ?? [])
+        dispatchData({ type: 'SET_DATA_TABLE', payload: resp?.data_table ?? [] })
+        dispatchData({ type: 'SET_HISTOGRAMS', payload: resp?.histograms ?? null })
       })
       .finally(() => setLoading(false))
   }, [filters])
 
-  /*   const aggregatedData = dataTable.reduce((acc, currentValue) => {
-    const date = new Date(currentValue.aggregate_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
-    //const date = new Date(currentValue.aggregate_date).toLocaleDateString(); // Get the date part only
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(currentValue);
-    return acc;
-  }, {} as Record<string, DataTable[]>);
-  
-  const aggregatedArray = Object.entries(aggregatedData).map(([date, values]) => ({
-    date,
-    values,
-  })); */
-
-  //fetchStatistics({ aggregateBy: 'day', timeTarget: 'pickup_date', startDate: null, endDate: null }).then((resp) => console.log(resp))
-
   const contextValue: DataContextProps = useMemo(
     () => ({
-      dataTable,
-      dispatch,
+      data,
+      dispatchFilters,
+      dispatchData,
       loading,
     }),
-    [dataTable, loading]
+    [data, loading]
   )
 
   return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>

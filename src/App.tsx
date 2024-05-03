@@ -1,22 +1,14 @@
 import { FC } from 'react'
 import Navbar from './components/navbar/Navbar'
-import Filters from './components/filters/Filters'
-import WidgetTable from './components/widgetTable/WidgetTable'
-import { DataProvider } from './context/DataContext'
+import { Outlet } from 'react-router-dom'
 
 const App: FC = () => {
   return (
     <section className="h-full w-full">
       <Navbar />
 
-      <section className="container mx-auto max-h-base h-full overflow-y-auto p-0">
-        <DataProvider>
-          <Filters />
-
-          <section>
-            <WidgetTable />
-          </section>
-        </DataProvider>
+      <section className="container mx-auto max-h-base h-full overflow-y-auto px-8">
+        <Outlet />
       </section>
     </section>
   )

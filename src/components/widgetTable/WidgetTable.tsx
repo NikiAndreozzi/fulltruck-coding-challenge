@@ -9,13 +9,14 @@ import { Label } from '../ui/label'
 
 type Props = {}
 const WidgetTable: FC<Props> = memo(() => {
-  const { loading, dataTable } = useDataContext()
+  const { loading, data } = useDataContext()
+
   return (
     <section className="mt-4">
       <section className="flex justify-between items-center">
-        <h2 className="text-lg font-medium flex-1">Summary ({dataTable?.length ?? 0})</h2>
+        <h2 className="text-lg font-medium flex-1">Summary ({data.data_table?.length ?? 0})</h2>
 
-        <div className='flex items-center gap-4'>
+        <div className="flex items-center gap-4">
           <Label htmlFor="data-mode">Table Mode</Label>
           <Switch id="data-mode" />
           <Label htmlFor="data-mode">Card Mode</Label>
@@ -27,9 +28,7 @@ const WidgetTable: FC<Props> = memo(() => {
           <TableHeader>
             <Header />
           </TableHeader>
-          <TableBody>
-            <Row />
-          </TableBody>
+          <TableBody>{data?.data_table?.map((value, index) => <Row value={value} key={index} />)}</TableBody>
         </Table>
       )}
 
