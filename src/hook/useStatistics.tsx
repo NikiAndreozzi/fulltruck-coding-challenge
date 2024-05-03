@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import json1 from './json1.json'
 import json2 from './json2.json'
 import { Filters } from '@/models/filters'
+import { StatisticsResponse } from './response'
 
 /**
  * Custom hook for fetching statistics data.
@@ -17,7 +18,7 @@ const useStatistics = () => {
    * @returns A promise that resolves to the fetched statistics data.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fetchStatistics = (_: Filters) => {
+  const fetchStatistics = (_: Filters): Promise<StatisticsResponse> => {
     toggleRef.current = !toggleRef.current
     return new Promise((resolve) => {
       const delay = Math.random() * 3000 + 500

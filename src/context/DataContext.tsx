@@ -34,9 +34,10 @@ const initialState: Filters = {
 type DataContextProps = {
   dataTable: DataTable[]
   dispatch: React.Dispatch<Action>
+  loading: boolean
 }
 
-const DataContext = createContext<DataContextProps>({ dataTable: [], dispatch: () => {} })
+const DataContext = createContext<DataContextProps>({ dataTable: [], dispatch: () => {}, loading: false })
 
 interface DataProviderProps {
   children?: React.ReactNode
@@ -59,8 +60,7 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
         endDate: filters.endDate,
       })
       .then((resp) => {
-        console.log('resp', resp)
-        //setDataTable(resp?.data_table ?? [])
+        setDataTable(resp?.data_table ?? [])
       })
       .finally(() => setLoading(false))
   }, [filters])
