@@ -7,8 +7,10 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useDataContext } from '@/context/DataContext'
 
 const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
+  const { dispatch } = useDataContext()
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
@@ -16,6 +18,7 @@ const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>
 
   return (
     <div className={cn('grid gap-2', className)}>
+      <label className="text-sm font-medium">Range date</label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -43,7 +46,11 @@ const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={(range) => {
+              setDate(range)
+              dispatch({ type: 'SET_START_DATE', payload: range?.from ? range.from.toDateString() : null })
+              dispatch({ type: 'SET_END_DATE', payload: range?.to ? range.to.toDateString() : null })
+            }}
             numberOfMonths={2}
           />
         </PopoverContent>

@@ -1,22 +1,33 @@
-import axios from 'axios'
-import StatisticsResponse from './response'
+import { useRef } from 'react'
+import json1 from './json1.json'
+import json2 from './json2.json'
+import { Filters } from '@/models/filters'
 
-const getRandomRange = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
+/**
+ * Custom hook for fetching statistics data.
+ * @returns An object containing the `fetchStatistics` function.
+ */
+const useStatistics = () => {
+  const toggleRef = useRef(false)
 
-const useStatistics = async () => {
-  try {
-    const response = await axios.get<StatisticsResponse>(
-      `http://localhost:5173/json${getRandomRange(1, 2)}.json`,
-      {
-        timeout: Math.random() * 3000 + 500,
-      }
-    )
-    return response?.data
-  } catch (error) {
-    console.error('Error fetching locale data:', error)
+  /**
+   * Fetches statistics data based on the provided props.
+   * This function has a delay to simulate a slow network call.
+   * @param props - The props object containing the necessary parameters for fetching statistics.
+   * @returns A promise that resolves to the fetched statistics data.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const fetchStatistics = (_: Filters) => {
+    toggleRef.current = !toggleRef.current
+    return new Promise((resolve) => {
+      const delay = Math.random() * 3000 + 500
+      setTimeout(() => {
+        toggleRef.current ? resolve(json1) : resolve(json2)
+      }, delay)
+    })
   }
+
+  return { fetchStatistics }
 }
 
 export default useStatistics

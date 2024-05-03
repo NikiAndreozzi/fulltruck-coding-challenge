@@ -1,8 +1,11 @@
-type Props = {
-  aggregateBy: 'day' | 'week' | 'month'
-  timeTarget: 'pickup_date' | 'created_at'
+type AggregateBy = 'day' | 'week' | 'month'
+type TimeTarget = 'pickup_date' | 'created_at'
+
+type Filters = {
+  aggregateBy: AggregateBy
+  timeTarget: TimeTarget
   startDate: string | null
   endDate: string | null
 }
 
-export default Props
+export type { Filters, AggregateBy, TimeTarget }
