@@ -1,4 +1,4 @@
-import { DataTable, Histograms, StatisticsResponse } from '@/hook/response'
+import { DataTable, Histograms, Kpis, StatisticsResponse } from '@/hook/response'
 import useStatistics from '@/hook/useStatistics'
 import { Filters } from '@/models/filters'
 import React, { FC, createContext, useMemo, useEffect } from 'react'
@@ -12,6 +12,7 @@ type ActionFilters =
 type ActionData =
   | { type: 'SET_DATA_TABLE'; payload: DataTable[] }
   | { type: 'SET_HISTOGRAMS'; payload: Histograms | null }
+  | { type: 'SET_KPIS'; payload: Kpis | null }
 
 const reducerFilters = (state: Filters, action: ActionFilters): Filters => {
   switch (action.type) {
@@ -34,6 +35,8 @@ const reducerData = (state: Partial<StatisticsResponse>, action: ActionData): Pa
       return { ...state, data_table: action.payload }
     case 'SET_HISTOGRAMS':
       return { ...state, histograms: action.payload }
+    case 'SET_KPIS':
+      return { ...state, kpis: action.payload }
     default:
       return state
   }
@@ -49,6 +52,7 @@ const initialStateFilters: Filters = {
 const initialStateData: Partial<StatisticsResponse> = {
   data_table: [],
   histograms: null,
+  kpis: null,
 }
 
 type DataContextProps = {
@@ -93,6 +97,7 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
         console.log(resp)
         dispatchData({ type: 'SET_DATA_TABLE', payload: resp?.data_table ?? [] })
         dispatchData({ type: 'SET_HISTOGRAMS', payload: resp?.histograms ?? null })
+        dispatchData({ type: 'SET_KPIS', payload: resp?.kpis ?? null })
       })
       .finally(() => setLoading(false))
   }, [filters])

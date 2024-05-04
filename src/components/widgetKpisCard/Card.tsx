@@ -1,46 +1,25 @@
 import React, { FC, memo } from 'react'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
-import { DataTable } from '@/hook/response'
-import { format } from 'date-fns'
-import classNames from 'classnames'
-import { useNavigate } from 'react-router-dom'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Carrier_Client_Data } from '@/hook/response'
 type Props = {
-  value: DataTable
+  value: Carrier_Client_Data
 }
 const WidgetCard: FC<Props> = memo(({ value }) => {
-  const navigate = useNavigate()
-
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle>
-          <section className="flex text-lg gap-4 w-full justify-between">
-            <div>{format(new Date(value.aggregate_date), 'dd-MM-yyyy')}</div>
-            <div
-              className={classNames('w-ful', {
-                'text-green-500': value.assigned_count === value.order_count,
-                'text-orange-500':
-                  value.assigned_count < value.order_count && value.assigned_count > value.order_count / 2,
-              })}
-            >
-              <span className="text-danger">{value.assigned_count}</span> of {value.order_count} order
-            </div>
-          </section>
+          <p>Cod. {value.label}</p>
         </CardTitle>
         <CardDescription>
           <section className="flex text-lg gap-4">
             <div>
-              Carrier:{' '}
-              <b>
-                {value.active_carrier} (new {value.new_carriers})
-              </b>
+              Order
+              <p className="font-bold">{value.order_count}</p>
             </div>
             <div>
-              Client:{' '}
-              <b>
-                {value.active_client} (new {value.new_clients})
-              </b>
+              Order % on tot
+              <p className="font-bold">{`${value.order_count_perc_on_tot.toString().slice(0, 5)}%`}</p>
             </div>
           </section>
         </CardDescription>
@@ -89,20 +68,21 @@ const WidgetCard: FC<Props> = memo(({ value }) => {
             </p>
           </div>
           <div>
-            <p>Margin %</p>
-            <p className="font-bold">{`${value.margin_perc.toString().slice(0, 5)}%`}</p>
+            <p>Margin % on tot</p>
+            <p className="font-bold">{`${value.margin_abs_perc_on_tot.toString().slice(0, 5)}%`}</p>
           </div>
           <div>
-            <p>Revenue assigned</p>
+            <p>Revenue % on tot</p>
+            <p className="font-bold">{`${value.revenue_perc_on_tot.toString().slice(0, 5)}%`}</p>
+          </div>
+          <div>
+            <p>Margin abs per order</p>
             <p className="font-bold">
-              {value.revenue_assigned.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
+              {value.margin_abs_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
             </p>
           </div>
         </section>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button onClick={() => navigate(`/kpis`)}>kpis</Button>
-      </CardFooter>
     </Card>
   )
 })

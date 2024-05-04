@@ -45,11 +45,34 @@ type Histograms = {
   time_revenue: Time
 }
 
+type Carrier_Client_Data = {
+  label: string
+  margin_abs: number
+  margin_abs_per_order: number
+  margin_abs_perc_on_tot: number
+  margin_perc: number
+  order_count: number
+  order_count_perc_on_tot: number
+  revenue: number
+  revenue_per_order: number
+  revenue_perc_on_tot: number
+}
+
+type Carrier_Client = {
+  [key: string]: Carrier_Client_Data
+}
+
+type Kpis = {
+  carrier: Carrier_Client
+  client: Carrier_Client
+}
+
 type IndexBy = 'date'
 
 type StatisticsResponse = {
   data_table: DataTable[]
   histograms: Histograms | null
+  kpis: Kpis | null
 }
 
 export type {
@@ -61,4 +84,7 @@ export type {
   TimeUnion,
   IndexBy,
   Histograms,
+  Kpis,
+  Carrier_Client,
+  Carrier_Client_Data,
 }
