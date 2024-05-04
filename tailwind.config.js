@@ -72,7 +72,7 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       maxHeight: {
-        base: 'calc(var(--vh) - 4.5rem)',
+        base: 'calc(var(--vh) - 3.5rem)',
       },
     },
   },

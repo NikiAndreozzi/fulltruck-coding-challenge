@@ -7,7 +7,7 @@ const App: FC = () => {
     <section className="h-full w-full">
       <Navbar />
 
-      <section className="container mx-auto max-h-base h-full overflow-y-auto px-8">
+      <section className="container mx-auto max-h-base h-full overflow-y-auto p-8">
         <Outlet />
       </section>
     </section>

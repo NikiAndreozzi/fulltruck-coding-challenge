@@ -8,7 +8,7 @@ type Props = {}
 const Filters: FC<Props> = () => {
   const { dispatchFilters } = useDataContext()
   return (
-    <section className="w-full flex justify-between py-4 gap-8">
+    <section className="w-full flex justify-between pb-4 gap-8">
       <div className="flex gap-8">
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Time target</label>

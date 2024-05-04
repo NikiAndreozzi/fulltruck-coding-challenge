@@ -56,6 +56,7 @@ type DataContextProps = {
   dispatchFilters: React.Dispatch<ActionFilters>
   dispatchData: React.Dispatch<ActionData>
   loading: boolean
+  filters: Filters
 }
 
 const DataContext = createContext<DataContextProps>({
@@ -63,6 +64,7 @@ const DataContext = createContext<DataContextProps>({
   dispatchFilters: () => {},
   dispatchData: () => {},
   loading: false,
+  filters: initialStateFilters,
 })
 
 interface DataProviderProps {
@@ -88,6 +90,7 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
         endDate: filters.endDate,
       })
       .then((resp) => {
+        console.log(resp)
         dispatchData({ type: 'SET_DATA_TABLE', payload: resp?.data_table ?? [] })
         dispatchData({ type: 'SET_HISTOGRAMS', payload: resp?.histograms ?? null })
       })
@@ -100,8 +103,9 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
       dispatchFilters,
       dispatchData,
       loading,
+      filters,
     }),
-    [data, loading]
+    [data, loading, filters]
   )
 
   return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>
