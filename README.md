@@ -35,7 +35,7 @@ Extract the zip file and access the `fulltruck-coding-challenge` directory.
 
 ## Install dependencies
 
-run `yarn install`
+run `yarn install` to install the dependencies
 
 ## Start project
 
