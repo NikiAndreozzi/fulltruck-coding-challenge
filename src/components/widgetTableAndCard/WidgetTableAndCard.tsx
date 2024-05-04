@@ -17,7 +17,7 @@ const WidgetTableAndCard: FC<Props> = memo(() => {
   const [isChecked, setIsChecked] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
-  const { loading, data } = useDataContext()
+  const { data } = useDataContext()
 
   const handleSwitchChange = () => {
     startTransition(() => {
@@ -26,7 +26,7 @@ const WidgetTableAndCard: FC<Props> = memo(() => {
   }
 
   return (
-    <section className="mt-4">
+    <section className="mt-4 min-h-[56rem] h-full">
       <section className="flex justify-between items-center">
         <h2 className="text-lg font-medium flex-1">Summary ({data.data_table?.length ?? 0})</h2>
 
@@ -37,7 +37,7 @@ const WidgetTableAndCard: FC<Props> = memo(() => {
         </div>
       </section>
 
-      {!loading && !isPending && !isChecked && (
+      {!data.loading && !isPending && !isChecked && (
         <Table className="mt-4">
           <TableHeader>
             <Header />
@@ -46,13 +46,13 @@ const WidgetTableAndCard: FC<Props> = memo(() => {
         </Table>
       )}
 
-      {!loading && !isPending && isChecked && (
-        <section className="grid grid-cols-3 gap-4 mt-4">
+      {!data.loading && !isPending && isChecked && (
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {data?.data_table?.map((value, index) => <WidgetCard value={value} key={index} />)}
         </section>
       )}
 
-      {(loading || isPending) && (
+      {(data.loading || isPending) && (
         <div className="mt-4">
           <SkeletonTable />
         </div>

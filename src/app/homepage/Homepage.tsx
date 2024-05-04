@@ -9,10 +9,8 @@ const Homepage: FC = () => {
     <DataProvider>
       <Filters />
 
-      <section>
-        <WidgetHistograms />
-        <WidgetTableAndCard />
-      </section>
+      <WidgetHistograms />
+      <WidgetTableAndCard />
     </DataProvider>
   )
 }

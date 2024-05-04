@@ -17,7 +17,7 @@ const WidgetHistograms: FC<Props> = memo(() => {
   const [current, setCurrent] = React.useState(0)
   const [count, setCount] = React.useState(0)
 
-  const { loading, data, filters } = useDataContext()
+  const { data, filters } = useDataContext()
   const aggregateArray = Object.keys(data.histograms ?? {})
 
   React.useEffect(() => {
@@ -42,7 +42,7 @@ const WidgetHistograms: FC<Props> = memo(() => {
         </h2>
       )}
 
-      {!loading && data.histograms && (
+      {!data.loading && data.histograms && (
         <section className="w-full h-[30rem] flex justify-center px-20">
           <Carousel className="w-full h-full" setApi={setApi}>
             <CarouselContent className="h-full">
@@ -79,7 +79,7 @@ const WidgetHistograms: FC<Props> = memo(() => {
         </section>
       )}
 
-      {loading && (
+      {data.loading && (
         <div className="mt-4">
           <SkeletonTable />
         </div>

@@ -2,9 +2,9 @@ import React, { FC, memo } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { DataTable } from '@/hook/response'
-import { format } from 'date-fns'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
+import { formatDate, formatEuro, formatPercent } from '@/lib/format'
 type Props = {
   value: DataTable
 }
@@ -16,7 +16,7 @@ const WidgetCard: FC<Props> = memo(({ value }) => {
       <CardHeader>
         <CardTitle>
           <section className="flex text-lg gap-4 w-full justify-between">
-            <div>{format(new Date(value.aggregate_date), 'dd-MM-yyyy')}</div>
+            <div>{formatDate(value.aggregate_date)}</div>
             <div
               className={classNames('w-ful', {
                 'text-green-500': value.assigned_count === value.order_count,
@@ -63,40 +63,30 @@ const WidgetCard: FC<Props> = memo(({ value }) => {
           </svg>
           <span>Margin & revenue</span>
         </div>
-        <section className="grid grid-cols-2 mt-4 gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
           <div>
             <p>Margin abs</p>
-            <p className="font-bold">
-              {value.margin_abs.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.margin_abs)}</p>
           </div>
           <div>
             <p>Revenue</p>
-            <p className="font-bold">
-              {value.revenue.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.revenue)}</p>
           </div>
           <div>
             <p>Margin abs (order)</p>
-            <p className="font-bold">
-              {value.margin_abs_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.margin_abs_per_order)}</p>
           </div>
           <div>
             <p>Revenue (order)</p>
-            <p className="font-bold">
-              {value.revenue_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.revenue_per_order)}</p>
           </div>
           <div>
             <p>Margin %</p>
-            <p className="font-bold">{`${value.margin_perc.toString().slice(0, 5)}%`}</p>
+            <p className="font-bold">{formatPercent(value.margin_perc)}</p>
           </div>
           <div>
             <p>Revenue assigned</p>
-            <p className="font-bold">
-              {value.revenue_assigned.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.revenue_assigned)}</p>
           </div>
         </section>
       </CardContent>

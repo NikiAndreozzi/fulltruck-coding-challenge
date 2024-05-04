@@ -1,4 +1,4 @@
-import { DataTable, Histograms, Kpis, StatisticsResponse } from '@/hook/response'
+import { DataTable, Histograms, Kpis, Scalars, StatisticsResponse, UIState } from '@/hook/response'
 import useStatistics from '@/hook/useStatistics'
 import { Filters } from '@/models/filters'
 import React, { FC, createContext, useMemo, useEffect } from 'react'
@@ -13,6 +13,9 @@ type ActionData =
   | { type: 'SET_DATA_TABLE'; payload: DataTable[] }
   | { type: 'SET_HISTOGRAMS'; payload: Histograms | null }
   | { type: 'SET_KPIS'; payload: Kpis | null }
+  | { type: 'SET_SCALARS'; payload: Scalars | null }
+  | { type: 'SET_ERROR'; payload: any }
+  | { type: 'SET_LOADING'; payload: boolean }
 
 const reducerFilters = (state: Filters, action: ActionFilters): Filters => {
   switch (action.type) {
@@ -29,7 +32,10 @@ const reducerFilters = (state: Filters, action: ActionFilters): Filters => {
   }
 }
 
-const reducerData = (state: Partial<StatisticsResponse>, action: ActionData): Partial<StatisticsResponse> => {
+const reducerData = (
+  state: StatisticsResponse & UIState,
+  action: ActionData
+): StatisticsResponse & UIState => {
   switch (action.type) {
     case 'SET_DATA_TABLE':
       return { ...state, data_table: action.payload }
@@ -37,6 +43,12 @@ const reducerData = (state: Partial<StatisticsResponse>, action: ActionData): Pa
       return { ...state, histograms: action.payload }
     case 'SET_KPIS':
       return { ...state, kpis: action.payload }
+    case 'SET_SCALARS':
+      return { ...state, scalars: action.payload }
+    case 'SET_ERROR':
+      return { ...state, error: action.payload }
+    case 'SET_LOADING':
+      return { ...state, loading: action.payload }
     default:
       return state
   }
@@ -49,25 +61,26 @@ const initialStateFilters: Filters = {
   aggregateBy: 'day',
 }
 
-const initialStateData: Partial<StatisticsResponse> = {
+const initialStateData: StatisticsResponse & UIState = {
   data_table: [],
   histograms: null,
   kpis: null,
+  scalars: null,
+  error: null,
+  loading: false,
 }
 
 type DataContextProps = {
-  data: Partial<StatisticsResponse>
+  data: StatisticsResponse & UIState
   dispatchFilters: React.Dispatch<ActionFilters>
   dispatchData: React.Dispatch<ActionData>
-  loading: boolean
   filters: Filters
 }
 
 const DataContext = createContext<DataContextProps>({
-  data: {},
+  data: initialStateData,
   dispatchFilters: () => {},
   dispatchData: () => {},
-  loading: false,
   filters: initialStateFilters,
 })
 
@@ -76,15 +89,13 @@ interface DataProviderProps {
 }
 
 const DataProvider: FC<DataProviderProps> = ({ children }) => {
-  const [loading, setLoading] = React.useState(false)
-
   const [filters, dispatchFilters] = React.useReducer(reducerFilters, initialStateFilters)
   const [data, dispatchData] = React.useReducer(reducerData, initialStateData)
 
   const resp = useStatistics()
 
   useEffect(() => {
-    setLoading(true)
+    dispatchData({ type: 'SET_LOADING', payload: true })
     /* TODO filters BE */
     resp
       .fetchStatistics({
@@ -94,12 +105,13 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
         endDate: filters.endDate,
       })
       .then((resp) => {
-        console.log(resp)
         dispatchData({ type: 'SET_DATA_TABLE', payload: resp?.data_table ?? [] })
         dispatchData({ type: 'SET_HISTOGRAMS', payload: resp?.histograms ?? null })
         dispatchData({ type: 'SET_KPIS', payload: resp?.kpis ?? null })
+        dispatchData({ type: 'SET_SCALARS', payload: resp?.scalars ?? null })
       })
-      .finally(() => setLoading(false))
+      .catch((err) => dispatchData({ type: 'SET_ERROR', payload: err }))
+      .finally(() => dispatchData({ type: 'SET_LOADING', payload: false }))
   }, [filters])
 
   const contextValue: DataContextProps = useMemo(
@@ -107,10 +119,9 @@ const DataProvider: FC<DataProviderProps> = ({ children }) => {
       data,
       dispatchFilters,
       dispatchData,
-      loading,
       filters,
     }),
-    [data, loading, filters]
+    [data, filters]
   )
 
   return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>

@@ -67,12 +67,32 @@ type Kpis = {
   client: Carrier_Client
 }
 
+type Scalars = {
+  active_carriers: number
+  active_clients: number
+  average_margin_perc: number
+  avg_order_margin_abs: number
+  avg_order_revenue: number
+  new_carriers: number
+  new_clients: number
+  total_assigned_count: number
+  total_margin_abs: number
+  total_order_count: number
+  total_revenue: number
+}
+
 type IndexBy = 'date'
 
 type StatisticsResponse = {
   data_table: DataTable[]
   histograms: Histograms | null
   kpis: Kpis | null
+  scalars: Scalars | null
+}
+
+type UIState = {
+  error: any
+  loading: boolean
 }
 
 export type {
@@ -87,4 +107,6 @@ export type {
   Kpis,
   Carrier_Client,
   Carrier_Client_Data,
+  Scalars,
+  UIState,
 }

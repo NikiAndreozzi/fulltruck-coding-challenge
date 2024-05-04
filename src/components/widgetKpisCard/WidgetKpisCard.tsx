@@ -7,7 +7,7 @@ type Props = {
   kpiId: 'client' | 'carrier'
 }
 const WidgetKpisCard: FC<Props> = memo(({ kpiId }) => {
-  const { loading, data } = useDataContext()
+  const { data } = useDataContext()
   const aggregateArray = Object.values(data.kpis?.[kpiId] ?? {})
 
   return (
@@ -16,13 +16,13 @@ const WidgetKpisCard: FC<Props> = memo(({ kpiId }) => {
         {kpiId} ({aggregateArray?.length ?? 0})
       </h2>
 
-      {!loading && (
-        <section className="grid grid-cols-3 gap-4 mt-4">
+      {!data.loading && (
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {aggregateArray?.map((value) => <WidgetCard value={value} key={value.label} />)}
         </section>
       )}
 
-      {loading && (
+      {data.loading && (
         <div className="mt-4">
           <SkeletonTable />
         </div>

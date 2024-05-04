@@ -1,3 +1,4 @@
+import { formatEuro, formatPercent } from '@/lib/format'
 import { BarDatum, ResponsiveBar } from '@nivo/bar'
 
 type ChartBar = {
@@ -9,8 +10,8 @@ type ChartBar = {
 }
 
 const formatLabel = (value: number, keys: string[]) => {
-  if (keys[0] === 'margin_abs') return value.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })
-  if (keys[0] === 'margin_perc') return `${value.toString().slice(0, 5)}%`
+  if (keys[0] === 'margin_abs') return formatEuro(value)
+  if (keys[0] === 'margin_perc') return formatPercent(value)
   return value.toString()
 }
 const ChartBar = ({ data, keys, axisBottomLegend, axisLeftLegend, scheme = 'nivo' }: ChartBar) => (

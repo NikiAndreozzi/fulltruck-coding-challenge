@@ -1,6 +1,7 @@
 import React, { FC, memo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Carrier_Client_Data } from '@/hook/response'
+import { formatEuro, formatPercent } from '@/lib/format'
 type Props = {
   value: Carrier_Client_Data
 }
@@ -19,7 +20,7 @@ const WidgetCard: FC<Props> = memo(({ value }) => {
             </div>
             <div>
               Order % on tot
-              <p className="font-bold">{`${value.order_count_perc_on_tot.toString().slice(0, 5)}%`}</p>
+              <p className="font-bold">{formatPercent(value.order_count_perc_on_tot)}</p>
             </div>
           </section>
         </CardDescription>
@@ -45,41 +46,31 @@ const WidgetCard: FC<Props> = memo(({ value }) => {
         <section className="grid grid-cols-2 mt-4 gap-4">
           <div>
             <p>Margin abs</p>
-            <p className="font-bold">
-              {value.margin_abs.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.margin_abs)}</p>
           </div>
           <div>
             <p>Revenue</p>
-            <p className="font-bold">
-              {value.revenue.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.revenue)}</p>
           </div>
           <div>
             <p>Margin abs (order)</p>
-            <p className="font-bold">
-              {value.margin_abs_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.margin_abs_per_order)}</p>
           </div>
           <div>
             <p>Revenue (order)</p>
-            <p className="font-bold">
-              {value.revenue_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.revenue_per_order)}</p>
           </div>
           <div>
             <p>Margin % on tot</p>
-            <p className="font-bold">{`${value.margin_abs_perc_on_tot.toString().slice(0, 5)}%`}</p>
+            <p className="font-bold">{formatPercent(value.margin_abs_perc_on_tot)}</p>
           </div>
           <div>
             <p>Revenue % on tot</p>
-            <p className="font-bold">{`${value.revenue_perc_on_tot.toString().slice(0, 5)}%`}</p>
+            <p className="font-bold">{formatPercent(value.revenue_perc_on_tot)}</p>
           </div>
           <div>
             <p>Margin abs per order</p>
-            <p className="font-bold">
-              {value.margin_abs_per_order.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </p>
+            <p className="font-bold">{formatEuro(value.margin_abs_per_order)}</p>
           </div>
         </section>
       </CardContent>
