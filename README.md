@@ -35,5 +35,13 @@ run `yarn install`
 
 ## Start project
 
-To start the project, run `yarn dev` or `npm run dev`.
+To start the project, run `yarn run dev`.
+
+## Linting
+
+Run `yarn run lint` to lint the project.
+
+## Format 
+
+Run `yarn run format` to format the project.
 

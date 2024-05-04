@@ -12,8 +12,8 @@ import { useDataContext } from '@/context/DataContext'
 const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
   const { dispatchFilters } = useDataContext()
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(2024, 0, 1),
+    to: addDays(new Date(), 20),
   })
 
   return (
@@ -30,10 +30,10 @@ const DatePickerWithRange = ({ className }: React.HTMLAttributes<HTMLDivElement>
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                  {format(date.from, 'LLL dd-MM-yyyy')} - {format(date.to, 'LLL dd-MM-yyyy')}
                 </>
               ) : (
-                format(date.from, 'LLL dd, y')
+                format(date.from, 'LLL dd-MM-yyyy')
               )
             ) : (
               <span>Pick a date</span>
